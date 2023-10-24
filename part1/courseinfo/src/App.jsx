@@ -33,6 +33,7 @@ const Content = (props) => {
   );
 };
 const Part = (props) => {
+  console.log("5");
   return (
     <p>
       {props.part} {props.exercise}
