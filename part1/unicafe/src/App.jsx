@@ -7,15 +7,17 @@ const Button = (props) => {
 const StatisticLine = (props) => {
   if (props.text === 'positive') {
     return (
-      <div>
-        {props.text} {props.count} %
-      </div>
+      <tr>
+        <td>{props.text}</td>
+        <td>{props.count}%</td>
+      </tr>
     );
   } else
     return (
-      <div>
-        {props.text} {props.count}
-      </div>
+      <tr>
+        <td>{props.text}</td>
+        <td>{props.count}</td>
+      </tr>
     );
 };
 
@@ -26,12 +28,16 @@ const Statistics = ({ good, bad, neutral, total }) => {
     return (
       <>
         <h1>statistics</h1>
-        <StatisticLine count={good} text="good" />
-        <StatisticLine count={neutral} text="neutral" />
-        <StatisticLine count={bad} text="bad" />
-        <StatisticLine count={total} text="all" />
-        <StatisticLine count={(good - bad) / total} text="average" />
-        <StatisticLine count={good / total} text="positive" />
+        <table>
+          <tbody>
+            <StatisticLine count={good} text="good" />
+            <StatisticLine count={neutral} text="neutral" />
+            <StatisticLine count={bad} text="bad" />
+            <StatisticLine count={total} text="all" />
+            <StatisticLine count={(good - bad) / total} text="average" />
+            <StatisticLine count={good / total} text="positive" />
+          </tbody>
+        </table>
       </>
     );
 };
