@@ -18,15 +18,28 @@ const ReviewCount = (props) => {
       </div>
     );
 };
+
+const Statistics = ({ good, bad, neutral, total }) => {
+  return (
+    <>
+      <h1>statistics</h1>
+      <ReviewCount count={good} type="good" />
+      <ReviewCount count={neutral} type="neutral" />
+      <ReviewCount count={bad} type="bad" />
+      <ReviewCount count={total} type="all" />
+      <ReviewCount count={(good - bad) / total} type="average" />
+      <ReviewCount count={good / total} type="positive" />
+    </>
+  );
+};
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [total, setTotal] = useState(0);
+
   const handleClicks = (useStateVal, stateSet) => {
     stateSet(useStateVal + 1);
-    setTotal(total + 1);
   };
 
   return (
@@ -39,13 +52,12 @@ const App = () => {
       />
       <Button handleClick={() => handleClicks(bad, setBad)} text="bad" />
       <br />
-      <h1>statistics</h1>
-      <ReviewCount count={good} type="good" />
-      <ReviewCount count={neutral} type="neutral" />
-      <ReviewCount count={bad} type="bad" />
-      <ReviewCount count={total} type="all" />
-      <ReviewCount count={(good - bad) / total} type="average" />
-      <ReviewCount count={good / total} type="positive" />
+      <Statistics
+        good={good}
+        bad={bad}
+        neutral={neutral}
+        total={good + bad + neutral}
+      />
     </div>
   );
 };
