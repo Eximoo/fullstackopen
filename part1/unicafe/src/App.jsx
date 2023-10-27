@@ -4,17 +4,17 @@ import { useState } from 'react';
 const Button = (props) => {
   return <button onClick={props.handleClick}>{props.text}</button>;
 };
-const ReviewCount = (props) => {
-  if (props.type === 'positive') {
+const StatisticLine = (props) => {
+  if (props.text === 'positive') {
     return (
       <div>
-        {props.type} {props.count} %
+        {props.text} {props.count} %
       </div>
     );
   } else
     return (
       <div>
-        {props.type} {props.count}
+        {props.text} {props.count}
       </div>
     );
 };
@@ -26,12 +26,12 @@ const Statistics = ({ good, bad, neutral, total }) => {
     return (
       <>
         <h1>statistics</h1>
-        <ReviewCount count={good} type="good" />
-        <ReviewCount count={neutral} type="neutral" />
-        <ReviewCount count={bad} type="bad" />
-        <ReviewCount count={total} type="all" />
-        <ReviewCount count={(good - bad) / total} type="average" />
-        <ReviewCount count={good / total} type="positive" />
+        <StatisticLine count={good} text="good" />
+        <StatisticLine count={neutral} text="neutral" />
+        <StatisticLine count={bad} text="bad" />
+        <StatisticLine count={total} text="all" />
+        <StatisticLine count={(good - bad) / total} text="average" />
+        <StatisticLine count={good / total} text="positive" />
       </>
     );
 };
