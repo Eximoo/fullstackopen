@@ -20,17 +20,20 @@ const ReviewCount = (props) => {
 };
 
 const Statistics = ({ good, bad, neutral, total }) => {
-  return (
-    <>
-      <h1>statistics</h1>
-      <ReviewCount count={good} type="good" />
-      <ReviewCount count={neutral} type="neutral" />
-      <ReviewCount count={bad} type="bad" />
-      <ReviewCount count={total} type="all" />
-      <ReviewCount count={(good - bad) / total} type="average" />
-      <ReviewCount count={good / total} type="positive" />
-    </>
-  );
+  if (total === 0) {
+    return <h1>no feedback was given, yet.</h1>;
+  } else
+    return (
+      <>
+        <h1>statistics</h1>
+        <ReviewCount count={good} type="good" />
+        <ReviewCount count={neutral} type="neutral" />
+        <ReviewCount count={bad} type="bad" />
+        <ReviewCount count={total} type="all" />
+        <ReviewCount count={(good - bad) / total} type="average" />
+        <ReviewCount count={good / total} type="positive" />
+      </>
+    );
 };
 const App = () => {
   // save clicks of each button to its own state
