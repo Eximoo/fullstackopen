@@ -11,10 +11,20 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.',
   ];
-  const getRan = (range) => {
+  const getRan = (range = anecdotes.length - 1) => {
     return Math.floor(Math.random() * (range - 0 + 1));
   };
-  const [selected, setSelected] = useState(getRan(anecdotes.length - 1));
+  
+  const populatePoints = (len = anecdotes.length) => {
+    const points = {};
+    for (let i = 0; i < len; i++) {
+      points[i] = 0;
+    }
+    return points;
+  };
+
+  const [selected, setSelected] = useState(getRan);
+  const [score, setScore] = useState(populatePoints);
 
   const nextHandler = () => {
     let next = 0;
@@ -23,10 +33,17 @@ const App = () => {
     } while (next === selected);
     setSelected(next);
   };
+  const voteHandler = () => {
+    let copy = { ...score };
+    copy[selected] = score[selected] + 1;
+    setScore(copy);
+  };
 
   return (
     <>
       <div>{anecdotes[selected]}</div>
+      <div>has {score[selected]}</div>
+      <button onClick={() => voteHandler()}>Vote!</button>
       <button onClick={() => nextHandler()}>next anecdote</button>
     </>
   );
