@@ -1,4 +1,15 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
+
+const Anecdote = (props) => {
+  return (
+    <>
+      <h1>{props.head}</h1>
+      <div>{props.anecdote}</div>
+      <div>has {props.score} votes</div>
+    </>
+  );
+};
 
 const App = () => {
   const anecdotes = [
@@ -14,7 +25,7 @@ const App = () => {
   const getRan = (range = anecdotes.length - 1) => {
     return Math.floor(Math.random() * (range - 0 + 1));
   };
-  
+
   const populatePoints = (len = anecdotes.length) => {
     const points = {};
     for (let i = 0; i < len; i++) {
@@ -25,6 +36,18 @@ const App = () => {
 
   const [selected, setSelected] = useState(getRan);
   const [score, setScore] = useState(populatePoints);
+
+  const findMostVoted = () => {
+    let topScore = 0,
+      index = 0;
+    for (let i = 0; i < anecdotes.length; i++) {
+      if (score[i] > topScore) {
+        topScore = score[i];
+        index = i;
+      }
+    }
+    return index;
+  };
 
   const nextHandler = () => {
     let next = 0;
@@ -41,10 +64,18 @@ const App = () => {
 
   return (
     <>
-      <div>{anecdotes[selected]}</div>
-      <div>has {score[selected]}</div>
+      <Anecdote
+        head="Anecdote of the day"
+        anecdote={anecdotes[selected]}
+        score={score[selected]}
+      />
       <button onClick={() => voteHandler()}>Vote!</button>
       <button onClick={() => nextHandler()}>next anecdote</button>
+      <Anecdote
+        head="Anecdote with most votes"
+        anecdote={anecdotes[findMostVoted()]}
+        score={score[findMostVoted()]}
+      />
     </>
   );
 };
