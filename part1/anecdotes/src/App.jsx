@@ -61,7 +61,12 @@ const App = () => {
     copy[selected] = score[selected] + 1;
     setScore(copy);
   };
-
+  //this is better 
+  // const voteHandler2 = () =>
+  //   setScore((score) => ({
+  //     ...score,
+  //     [selected]: score[selected] + 1,
+  //   }));
   return (
     <>
       <Anecdote
