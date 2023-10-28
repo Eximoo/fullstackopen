@@ -12,8 +12,6 @@ const App = () => {
     'The only way to go fast, is to go well.',
   ];
   const getRan = (range) => {
-    let temp = Math.floor(Math.random() * (range - 0 + 1));
-    return temp;
     return Math.floor(Math.random() * (range - 0 + 1));
   };
   const [selected, setSelected] = useState(getRan(anecdotes.length - 1));
