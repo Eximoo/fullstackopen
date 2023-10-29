@@ -20,6 +20,11 @@ const App = () => {
         exercises: 14,
         id: 3,
       },
+      {
+        name: 'Redux  ',
+        exercises: 11,
+        id: 4,
+      },
     ],
   };
 
@@ -49,10 +54,10 @@ const Part = ({ part }) => {
 };
 const Total = ({ course }) => {
   const sum = course.parts.reduce((acc, p) => acc + p.exercises, 0);
-  // let sum =
-  //   props.course.parts[0].exercises +
-  //   props.course.parts[1].exercises +
-  //   props.course.parts[2].exercises;
-  return <p>Number of exercises {sum}</p>;
+  return (
+    <p>
+      <b>total of {sum} exercises</b>
+    </p>
+  );
 };
 export default App;
