@@ -9,6 +9,38 @@ const Entry = ({ person }) => {
     </>
   );
 };
+const Filter = ({ newFilter, handle }) => {
+  return (
+    <div>
+      filter shown with:
+      <input id="filter" value={newFilter} onChange={handle} />
+    </div>
+  );
+};
+const AddNewEntry = ({ addPerson, newName, handleOnChange, newNumber }) => {
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: <input id="name" value={newName} onChange={handleOnChange} />
+      </div>
+      <div>
+        number:{' '}
+        <input id="number" value={newNumber} onChange={handleOnChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const ShowEntries = ({ persons, newFilter }) => {
+  return persons
+    .filter((value) =>
+      value.name.toLowerCase().includes(newFilter.toLowerCase())
+    )
+    .map((value) => <Entry key={value.name} person={value} />);
+};
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -41,32 +73,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with:{' '}
-        <input id="filter" value={newFilter} onChange={handleFilterChange} />
-        <div>debug: {newFilter}</div>
-      </div>
+      <Filter newFilter={newFilter} handle={handleFilterChange} />
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input id="name" value={newName} onChange={handleOnChange} />
-        </div>
-        <div>
-          number:{' '}
-          <input id="number" value={newNumber} onChange={handleOnChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <AddNewEntry
+        addPerson={addPerson}
+        newName={newName}
+        handleOnChange={handleOnChange}
+        newNumber={newNumber}
+      />
+
       <h2>Numbers</h2>
-      {persons
-        .filter((value) =>
-          value.name.toLowerCase().includes(newFilter.toLowerCase())
-        )
-        .map((value) => (
-          <Entry key={value.name} person={value} />
-        ))}
+      <ShowEntries persons={persons} newFilter={newFilter} />
     </div>
   );
 };
