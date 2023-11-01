@@ -90,15 +90,30 @@ const App = () => {
         const toUpdate = persons.find(
           (person) => person.name.toLowerCase() === newName.toLowerCase()
         );
-        setPersons(
-          persons.map((person) =>
-            person.id == toUpdate.id ? { ...person, number: newNumber } : person
+        personServices
+          .update(toUpdate.id, { ...toUpdate, number: newNumber })
+          .then(() =>
+            setPersons(
+              persons.map((person) =>
+                person.id == toUpdate.id
+                  ? { ...person, number: newNumber }
+                  : person
+              )
+            )
           )
-        );
-        pushNoti({
-          message: `${newName}'s number was updated to ${newNumber}`,
-          type: 'success',
-        });
+          .then(() =>
+            pushNoti({
+              message: `${newName}'s number was updated to ${newNumber}`,
+              type: 'success',
+            })
+          )
+          .catch(() => {
+            pushNoti({
+              message: `Information of ${toUpdate.name} has already been removed from the server`,
+              type: 'error',
+            });
+            setPersons(persons.filter((person) => person.id != toUpdate.id));
+          });
       } else {
         return;
       }
@@ -141,14 +156,12 @@ const App = () => {
     if (
       window.confirm(`Do you really wish to remove ${personBeingRemoved.name}`)
     ) {
-      personServices
-        .remove(event.target.id)
-        .catch(() =>
-          pushNoti({
-            message: `Information of ${personBeingRemoved.name} has already been removed from the server`,
-            type: 'error',
-          })
-        );
+      personServices.remove(event.target.id).catch(() =>
+        pushNoti({
+          message: `Information of ${personBeingRemoved.name} has already been removed from the server`,
+          type: 'error',
+        })
+      );
       setPersons(persons.filter((person) => person.id != event.target.id));
     } else {
       return;
