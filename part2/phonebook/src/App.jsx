@@ -62,26 +62,43 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
-    if (persons.find((value) => value.name === newName)) {
-      alert(`${newName} is already in Phonebook`);
-      return;
-    }
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-    };
-
-    personServices.create(newPerson).then((val) =>
-      setPersons(
-        persons.concat({
-          name: val.data.name,
-          number: val.data.number,
-          id: val.data.id,
-        })
+    if (
+      persons.find(
+        (value) => value.name.toLowerCase() === newName.toLowerCase()
       )
-    );
+    ) {
+      if (
+        window.confirm(
+          `${newName} is already added to database, do you want to update the number?`
+        )
+      ) {
+        const toUpdate = persons.find(
+          (person) => person.name.toLowerCase() === newName.toLowerCase()
+        );
+        setPersons(
+          persons.map((person) =>
+            person.id == toUpdate.id ? { ...person, number: newNumber } : person
+          )
+        );
+      } else {
+        return;
+      }
+    } else {
+      const newPerson = {
+        name: newName,
+        number: newNumber,
+      };
 
-    // setPersons(persons.concat({ name: newName, number: newNumber }));
+      personServices.create(newPerson).then((val) =>
+        setPersons(
+          persons.concat({
+            name: val.data.name,
+            number: val.data.number,
+            id: val.data.id,
+          })
+        )
+      );
+    }
     setNewName('');
     setNewNumber('');
   };
