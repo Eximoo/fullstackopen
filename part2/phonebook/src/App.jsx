@@ -13,6 +13,13 @@ const Entry = ({ person, handleEntryRemoval }) => {
     </>
   );
 };
+const Notification = ({ notiMsg }) => {
+  if (notiMsg == null) {
+    return;
+  } else {
+    return <div className="notification">{notiMsg}</div>;
+  }
+};
 const Filter = ({ newFilter, handle }) => {
   return (
     <div>
@@ -56,6 +63,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
+  const [notiMsg, setNotiMsg] = useState('');
+
   useEffect(() => {
     personServices.getAll().then((response) => setPersons(response.data));
   }, []);
@@ -80,6 +89,7 @@ const App = () => {
             person.id == toUpdate.id ? { ...person, number: newNumber } : person
           )
         );
+        pushNoti(`${newName}'s number was updated to ${newNumber}`);
       } else {
         return;
       }
@@ -98,9 +108,14 @@ const App = () => {
           })
         )
       );
+      pushNoti(`${newName} was added`);
     }
     setNewName('');
     setNewNumber('');
+  };
+  const pushNoti = (noti) => {
+    setNotiMsg(noti);
+    setTimeout(() => setNotiMsg(null), 5000);
   };
   const handleOnChange = (e) => {
     e.target.id === 'name'
@@ -126,9 +141,10 @@ const App = () => {
   };
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification notiMsg={notiMsg} />
       <Filter newFilter={newFilter} handle={handleFilterChange} />
-      <h2>Add new</h2>
+      <h1>Add new</h1>
       <AddNewEntry
         addPerson={addPerson}
         newName={newName}
@@ -136,7 +152,7 @@ const App = () => {
         newNumber={newNumber}
       />
 
-      <h2>Numbers</h2>
+      <h1>Numbers</h1>
       <ShowEntries
         persons={persons}
         newFilter={newFilter}
