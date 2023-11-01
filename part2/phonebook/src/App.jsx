@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import personServices from './services/persons';
-const Entry = ({ person }) => {
+const Entry = ({ person, handleEntryRemoval }) => {
   return (
     <>
       <p key={person.name}>
-        {person.name} {person.number}
+        {person.name} {person.number}{' '}
+        <button id={person.id} onClick={handleEntryRemoval}>
+          delete
+        </button>
       </p>
     </>
   );
@@ -35,20 +38,20 @@ const AddNewEntry = ({ addPerson, newName, handleOnChange, newNumber }) => {
   );
 };
 
-const ShowEntries = ({ persons, newFilter }) => {
+const ShowEntries = ({ persons, newFilter, handleEntryRemoval }) => {
   return persons
     .filter((value) =>
       value.name.toLowerCase().includes(newFilter.toLowerCase())
     )
-    .map((value) => <Entry key={value.name} person={value} />);
+    .map((value) => (
+      <Entry
+        key={value.name}
+        person={value}
+        handleEntryRemoval={handleEntryRemoval}
+      />
+    ));
 };
 const App = () => {
-  // const [persons, setPersons] = useState([
-  //   { name: 'Arto Hellas', number: '040-123456', id: 1 },
-  //   { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-  //   { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-  //   { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
-  // ]);
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
@@ -56,6 +59,7 @@ const App = () => {
   useEffect(() => {
     personServices.getAll().then((response) => setPersons(response.data));
   }, []);
+
   const addPerson = (e) => {
     e.preventDefault();
     if (persons.find((value) => value.name === newName)) {
@@ -67,13 +71,15 @@ const App = () => {
       number: newNumber,
     };
 
-    personServices
-      .create(newPerson)
-      .then((val) =>
-        setPersons(
-          persons.concat({ name: val.data.name, number: val.data.number })
-        )
-      );
+    personServices.create(newPerson).then((val) =>
+      setPersons(
+        persons.concat({
+          name: val.data.name,
+          number: val.data.number,
+          id: val.data.id,
+        })
+      )
+    );
 
     // setPersons(persons.concat({ name: newName, number: newNumber }));
     setNewName('');
@@ -86,6 +92,20 @@ const App = () => {
   };
   const handleFilterChange = (e) => {
     setNewFilter(e.target.value);
+  };
+  const handleEntryRemoval = (event) => {
+    if (
+      window.confirm(
+        `Do you really wish to remove ${
+          persons.find((person) => person.id == event.target.id).name
+        }`
+      )
+    ) {
+      personServices.remove(event.target.id);
+      setPersons(persons.filter((person) => person.id != event.target.id));
+    } else {
+      return;
+    }
   };
   return (
     <div>
@@ -100,7 +120,11 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <ShowEntries persons={persons} newFilter={newFilter} />
+      <ShowEntries
+        persons={persons}
+        newFilter={newFilter}
+        handleEntryRemoval={handleEntryRemoval}
+      />
     </div>
   );
 };
