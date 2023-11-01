@@ -13,11 +13,17 @@ const Entry = ({ person, handleEntryRemoval }) => {
     </>
   );
 };
-const Notification = ({ notiMsg }) => {
-  if (notiMsg == null) {
+const Notification = ({ notiObj }) => {
+  if (notiObj == null) {
     return;
   } else {
-    return <div className="notification">{notiMsg}</div>;
+    const notiTypeToClassName = {
+      success: 'notificationSuccess',
+      error: 'notificationError',
+    };
+    return (
+      <div className={notiTypeToClassName[notiObj.type]}>{notiObj.message}</div>
+    );
   }
 };
 const Filter = ({ newFilter, handle }) => {
@@ -63,7 +69,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
-  const [notiMsg, setNotiMsg] = useState('');
+  const [notiObj, setNotiObj] = useState(null);
 
   useEffect(() => {
     personServices.getAll().then((response) => setPersons(response.data));
@@ -89,7 +95,10 @@ const App = () => {
             person.id == toUpdate.id ? { ...person, number: newNumber } : person
           )
         );
-        pushNoti(`${newName}'s number was updated to ${newNumber}`);
+        pushNoti({
+          message: `${newName}'s number was updated to ${newNumber}`,
+          type: 'success',
+        });
       } else {
         return;
       }
@@ -108,14 +117,14 @@ const App = () => {
           })
         )
       );
-      pushNoti(`${newName} was added`);
+      pushNoti({ message: `${newName} was added`, type: 'success' });
     }
     setNewName('');
     setNewNumber('');
   };
   const pushNoti = (noti) => {
-    setNotiMsg(noti);
-    setTimeout(() => setNotiMsg(null), 5000);
+    setNotiObj(noti);
+    setTimeout(() => setNotiObj(null), 5000);
   };
   const handleOnChange = (e) => {
     e.target.id === 'name'
@@ -126,14 +135,20 @@ const App = () => {
     setNewFilter(e.target.value);
   };
   const handleEntryRemoval = (event) => {
+    const personBeingRemoved = persons.find(
+      (person) => person.id == event.target.id
+    );
     if (
-      window.confirm(
-        `Do you really wish to remove ${
-          persons.find((person) => person.id == event.target.id).name
-        }`
-      )
+      window.confirm(`Do you really wish to remove ${personBeingRemoved.name}`)
     ) {
-      personServices.remove(event.target.id);
+      personServices
+        .remove(event.target.id)
+        .catch(() =>
+          pushNoti({
+            message: `Information of ${personBeingRemoved.name} has already been removed from the server`,
+            type: 'error',
+          })
+        );
       setPersons(persons.filter((person) => person.id != event.target.id));
     } else {
       return;
@@ -142,7 +157,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification notiMsg={notiMsg} />
+      <Notification notiObj={notiObj} />
       <Filter newFilter={newFilter} handle={handleFilterChange} />
       <h1>Add new</h1>
       <AddNewEntry

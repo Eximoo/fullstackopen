@@ -1,29 +1,14 @@
 {
   "persons": [
     {
-      "name": "Adalo",
-      "number": "8888",
-      "id": 3
-    },
-    {
-      "name": "dwddw",
-      "number": "23213212",
-      "id": 4
-    },
-    {
-      "name": "kur",
-      "number": "5555",
-      "id": 5
-    },
-    {
-      "name": "dwa",
-      "number": "12321",
-      "id": 6
-    },
-    {
       "name": "awdadw",
       "number": "2222",
       "id": 7
+    },
+    {
+      "name": "dawadwadw",
+      "number": "123",
+      "id": 8
     }
   ]
 }

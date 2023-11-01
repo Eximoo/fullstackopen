@@ -2,10 +2,17 @@ h1 {
   color: green;
   font-style: italic;
 }
-.notification{
-  color:black;
+.notificationSuccess {
+  color: black;
   background-color: lightgreen;
   padding: 10px;
   margin: 20px 10px;
-  width: fit-content;
+  max-width: fit-content;
+}
+.notificationError {
+  color: black;
+  background-color: lightcoral;
+  padding: 10px;
+  margin: 20px 10px;
+  max-width: fit-content;
 }
