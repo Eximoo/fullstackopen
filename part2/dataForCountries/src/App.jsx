@@ -133,7 +133,7 @@ function App() {
           });
       } else {
         //no capital - clear last data
-         setOpenWeatherResponse(null);
+        setOpenWeatherResponse(null);
       }
     }
   }, [expandedCountry]);
