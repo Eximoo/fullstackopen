@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-function Display({ countries, searchVal }) {
+function Display({ countries, searchVal, handleButtonShow }) {
   if (countries == null || searchVal == '') {
     return;
   }
@@ -23,8 +23,11 @@ function Display({ countries, searchVal }) {
     return (
       <>
         <h1>{filtered[0].name.common}</h1>
-        <p>capital {filtered[0].capital[0]}</p>
-        <p>area {filtered[0].area}</p>
+        <p>
+          capital {filtered[0].capital ? filtered[0].capital[0] : `N/A`}
+          <br />
+          area {filtered[0].area}
+        </p>
         <p>
           <b>Languages:</b>
         </p>
@@ -42,6 +45,9 @@ function Display({ countries, searchVal }) {
       {filtered.map((country, i) => (
         <span key={i}>
           {country.name.common}
+          <button name={country.name.common} onClick={handleButtonShow}>
+            Show
+          </button>{' '}
           <br />
         </span>
       ))}
@@ -63,13 +69,23 @@ function App() {
   const handleSetSearch = (e) => {
     setSearchVal(e.target.value);
   };
+  const handleButtonShow = (e) => {
+    console.log(e.target);
+    console.log(e.target.name);
+
+    setSearchVal(e.target.name);
+  };
   return (
     <>
       <form>
         <span>find countries </span>
         <input type="text" value={searchVal} onChange={handleSetSearch} />
       </form>
-      <Display searchVal={searchVal} countries={countries} />
+      <Display
+        searchVal={searchVal}
+        countries={countries}
+        handleButtonShow={handleButtonShow}
+      />
     </>
   );
 }
