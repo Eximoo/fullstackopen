@@ -16,15 +16,14 @@ const Entry = ({ person, handleEntryRemoval }) => {
 const Notification = ({ notiObj }) => {
   if (notiObj == null) {
     return;
-  } else {
-    const notiTypeToClassName = {
-      success: 'notificationSuccess',
-      error: 'notificationError',
-    };
-    return (
-      <div className={notiTypeToClassName[notiObj.type]}>{notiObj.message}</div>
-    );
   }
+  const notiTypeToClassName = {
+    success: 'notificationSuccess',
+    error: 'notificationError',
+  };
+  return (
+    <div className={notiTypeToClassName[notiObj.type]}>{notiObj.message}</div>
+  );
 };
 const Filter = ({ newFilter, handle }) => {
   return (
