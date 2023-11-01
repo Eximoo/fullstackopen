@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import personServices from './services/persons';
 const Entry = ({ person }) => {
   return (
     <>
@@ -55,9 +54,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(response.data));
+    personServices.getAll().then((response) => setPersons(response.data));
   }, []);
   const addPerson = (e) => {
     e.preventDefault();
@@ -65,11 +62,13 @@ const App = () => {
       alert(`${newName} is already in Phonebook`);
       return;
     }
-    axios
-      .post('http://localhost:3001/persons', {
-        name: newName,
-        number: newNumber,
-      })
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+
+    personServices
+      .create(newPerson)
       .then((val) =>
         setPersons(
           persons.concat({ name: val.data.name, number: val.data.number })
