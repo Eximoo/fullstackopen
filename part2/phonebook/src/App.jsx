@@ -55,7 +55,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
   useEffect(() => {
-    console.log('we fettin');
     axios
       .get('http://localhost:3001/persons')
       .then((response) => setPersons(response.data));
@@ -66,7 +65,18 @@ const App = () => {
       alert(`${newName} is already in Phonebook`);
       return;
     }
-    setPersons(persons.concat({ name: newName, number: newNumber }));
+    axios
+      .post('http://localhost:3001/persons', {
+        name: newName,
+        number: newNumber,
+      })
+      .then((val) =>
+        setPersons(
+          persons.concat({ name: val.data.name, number: val.data.number })
+        )
+      );
+
+    // setPersons(persons.concat({ name: newName, number: newNumber }));
     setNewName('');
     setNewNumber('');
   };
