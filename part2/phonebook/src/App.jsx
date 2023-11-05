@@ -108,7 +108,8 @@ const App = () => {
               type: 'success',
             })
           )
-          .catch(() => {
+          .catch((error) => {
+            console.log(error);
             pushNoti({
               message: `Information of ${toUpdate.name} has already been removed from the server`,
               type: 'error',
@@ -164,6 +165,10 @@ const App = () => {
         })
       );
       setPersons(persons.filter((person) => person.id != event.target.id));
+      pushNoti({
+        message: `Information of ${personBeingRemoved.name} has been removed from the database`,
+        type: 'success',
+      });
     } else {
       return;
     }
