@@ -7,7 +7,7 @@ const getAll = () => {
 };
 
 const create = (newObject) => {
-  return axios.post('', newObject);
+  return axios.put('', newObject);
 };
 
 const update = (id, newObject) => {

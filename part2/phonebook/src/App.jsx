@@ -4,7 +4,7 @@ import personServices from './services/persons';
 const Entry = ({ person, handleEntryRemoval }) => {
   return (
     <>
-      <p key={person.name}>
+      <p key={person.id}>
         {person.name} {person.number}{' '}
         <button id={person.id} onClick={handleEntryRemoval}>
           delete
@@ -57,7 +57,7 @@ const ShowEntries = ({ persons, newFilter, handleEntryRemoval }) => {
     )
     .map((value) => (
       <Entry
-        key={value.name}
+        key={value.id}
         person={value}
         handleEntryRemoval={handleEntryRemoval}
       />
@@ -71,7 +71,9 @@ const App = () => {
   const [notiObj, setNotiObj] = useState(null);
 
   useEffect(() => {
-    personServices.getAll().then((response) => setPersons(response.data));
+    personServices.getAll().then((response) => {
+      setPersons(response.data);
+    });
   }, []);
 
   const addPerson = (e) => {
