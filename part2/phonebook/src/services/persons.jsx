@@ -11,7 +11,6 @@ const create = (newObject) => {
 };
 
 const update = (id, newObject) => {
-  console.log(id, newObject, 'inside of update');
   return axios.put(`/${id}`, newObject);
 };
 const remove = (id) => {

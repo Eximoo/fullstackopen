@@ -125,16 +125,26 @@ const App = () => {
         number: newNumber,
       };
 
-      personServices.create(newPerson).then((val) =>
-        setPersons(
-          persons.concat({
-            name: val.data.name,
-            number: val.data.number,
-            id: val.data.id,
-          })
+      personServices
+        .create(newPerson)
+        .then((val) =>
+          setPersons(
+            persons.concat({
+              name: val.data.name,
+              number: val.data.number,
+              id: val.data.id,
+            })
+          )
         )
-      );
-      pushNoti({ message: `${newName} was added`, type: 'success' });
+        .then(() =>
+          pushNoti({ message: `${newName} was added`, type: 'success' })
+        )
+        .catch((error) => {
+          pushNoti({
+            message: `${JSON.stringify(error.response.data.error)}`,
+            type: 'error',
+          });
+        });
     }
     setNewName('');
     setNewNumber('');
