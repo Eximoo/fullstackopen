@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import { set, connect, Schema, model, connection } from 'mongoose';
+import { process } from 'dotenv';
 
 if (process.argv.length < 3) {
   console.log('give password as argument');
@@ -9,15 +10,15 @@ const password = process.argv[2];
 
 const url = `mongodb+srv://eximo:${password}@fso.hgyq2o6.mongodb.net/noteApp?retryWrites=true&w=majority`;
 
-mongoose.set('strictQuery', false);
-mongoose.connect(url);
+set('strictQuery', false);
+connect(url);
 
-const personSchema = new mongoose.Schema({
+const personSchema = new Schema({
   name: String,
   number: String,
 });
 
-const Person = mongoose.model('Person', personSchema);
+const Person = model('Person', personSchema);
 
 if (process.argv.length < 4) {
   Person.find({}).then((persons) => {
@@ -25,7 +26,7 @@ if (process.argv.length < 4) {
     persons.forEach((person) => {
       console.log(person.name, person.number);
     });
-    mongoose.connection.close();
+    connection.close();
   });
 } else {
   const person = new Person({
@@ -36,6 +37,6 @@ if (process.argv.length < 4) {
     console.log(
       `added ${process.argv[3]} number ${process.argv[4]} to phonebook`
     );
-    mongoose.connection.close();
+    connection.close();
   });
 }
