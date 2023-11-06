@@ -109,12 +109,17 @@ const App = () => {
             })
           )
           .catch((error) => {
-            console.log(error);
             pushNoti({
-              message: `Information of ${toUpdate.name} has already been removed from the server`,
+              message: `${JSON.stringify(error.response.data.error)}`,
               type: 'error',
             });
-            setPersons(persons.filter((person) => person.id != toUpdate.id));
+            if (
+              !JSON.stringify(
+                error.response.data.error.includes('Validation failed')
+              )
+            ) {
+              setPersons(persons.filter((person) => person.id != toUpdate.id));
+            }
           });
       } else {
         return;
