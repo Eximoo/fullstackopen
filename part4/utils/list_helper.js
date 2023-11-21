@@ -81,6 +81,9 @@ const mostLikes = (blogs) => {
 
     if (!found) {
       authors.push({ author: blog.author, likes: blog.likes });
+      if (blog.author > top.highest) {
+        top.index = authors.length - 1;
+      }
     }
   });
   console.log(authors, top.index);
