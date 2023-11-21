@@ -31,15 +31,15 @@ const listWithMultipleBlogs = [
     title: 'Considered Harmful',
     author: 'Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 111,
+    likes: 0,
     __v: 0,
   },
   {
     _id: '5a422aa71b54a676234d17f7',
-    title: 'Go To Statement Considered Harmful',
+    title: 'Go Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 0,
+    likes: 111,
     __v: 0,
   },
   {
@@ -81,8 +81,8 @@ describe('favoriteBlog', () => {
   });
   test('when multiple blogs are passed, return title author likes of most liked blog', () => {
     expect(listHelper.favoriteBlog(listWithMultipleBlogs)).toEqual({
-      title: 'Considered Harmful',
-      author: 'Dijkstra',
+      title: 'Go Considered Harmful',
+      author: 'Edsger W. Dijkstra',
       likes: 111,
     });
   });
@@ -102,6 +102,24 @@ describe('mostBlogs', () => {
     expect(listHelper.mostBlogs(listWithMultipleBlogs)).toEqual({
       author: 'Edsger W. Dijkstra',
       blogs: 3,
+    });
+  });
+});
+describe('mostLikes', () => {
+  test('no blog return 0', () => {
+    expect(listHelper.mostLikes([])).toBe(0);
+  });
+  test('one blog return blog author: blog likes', () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 5,
+    });
+  });
+
+  test('multiple blogs return author:sumOfLikes', () => {
+    expect(listHelper.mostLikes(listWithMultipleBlogs)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 123,
     });
   });
 });
