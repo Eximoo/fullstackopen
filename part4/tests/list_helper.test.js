@@ -87,3 +87,21 @@ describe('favoriteBlog', () => {
     });
   });
 });
+describe('mostBlogs', () => {
+  test('no blog return 0', () => {
+    expect(listHelper.mostBlogs([])).toBe(0);
+  });
+  test('one blog return author:1', () => {
+    expect(listHelper.mostBlogs(listWithOneBlog)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1,
+    });
+  });
+
+  test('multiple blogs return Edsger:3', () => {
+    expect(listHelper.mostBlogs(listWithMultipleBlogs)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 3,
+    });
+  });
+});

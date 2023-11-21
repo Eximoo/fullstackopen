@@ -26,5 +26,39 @@ const favoriteBlog = (blogs) => {
 
   return { title: fav.title, author: fav.author, likes: fav.likes };
 };
+/**
+ *
+ * @param {Array} blogs
+ */
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return 0;
+  }
+  let top = { highest: 1, index: 0 };
+  let authors = [
+    {
+      author: blogs[0].author,
+      blogs: 0,
+    },
+  ];
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+  blogs.forEach((blog) => {
+    let found = false;
+    authors.forEach((entry, i) => {
+      if (entry.author === blog.author) {
+        authors[i].blogs = authors[i].blogs + 1;
+        found = true;
+        if (authors[i].blogs > top.highest) {
+          top.index = i;
+        }
+      }
+    });
+    if (!found) {
+      authors.push({ author: blog.author, blogs: 1 });
+    }
+  });
+  console.log(authors);
+  return authors[top.index];
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
