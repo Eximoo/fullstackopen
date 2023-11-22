@@ -6,7 +6,6 @@ const config = require('./utils/config.js');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger.js');
 logger.info('connecting to', config.MONGODB_URI);
-
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {

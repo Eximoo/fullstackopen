@@ -10,6 +10,7 @@ const totalLikes = (blogs) => {
   });
   return sum;
 };
+
 /**
  * @param {Array} blogs blogs
  */
@@ -26,6 +27,7 @@ const favoriteBlog = (blogs) => {
 
   return { title: fav.title, author: fav.author, likes: fav.likes };
 };
+
 /**
  *
  * @param {Array} blogs
@@ -86,7 +88,6 @@ const mostLikes = (blogs) => {
       }
     }
   });
-  console.log(authors, top.index);
   return authors[top.index];
 };
 
