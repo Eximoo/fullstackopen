@@ -87,7 +87,22 @@ test('likes property is set to 0 when not defined in body', async () => {
   // const [blogToTest] = response.body.filter((c) => c.title === 'Blog Post 69');
   expect(blogToTest.body.likes).toBe(0);
 });
+test('missing title returns 400', async () => {
+  const sampleNoLikes = {
+    title: 'Blog Post 69',
+    author: 'Author 69',
+  };
 
+  await api.post('/api/blogs').send(sampleNoLikes).expect(400);
+});
+test('missing url returns 400', async () => {
+  const sampleNoLikes = {
+    author: 'Author 69',
+    url: 'http://example.com/blog69',
+  };
+
+  await api.post('/api/blogs').send(sampleNoLikes).expect(400);
+});
 beforeEach(async () => {
   await Blog.deleteMany({});
   const blogPromises = initialBlogs.map((blog) => new Blog(blog).save());
