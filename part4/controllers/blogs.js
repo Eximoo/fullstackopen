@@ -9,17 +9,20 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body);
 
-  blog
-    .save()
-    .then((result) => {
-      response.status(201).json(result);
-    })
-    .catch((error) => {
-      response.status(400).json({ error: error.message });
-    });
+  const result = await blog.save();
+  response.status(201).json(result);
+
+  // blog
+  //   .save()
+  //   .then((result) => {
+  //     response.status(201).json(result);
+  //   })
+  //   .catch((error) => {
+  //     response.status(400).json({ error: error.message });
+  //   });
 });
 
 module.exports = blogsRouter;
