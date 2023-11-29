@@ -70,16 +70,28 @@ test('blog is added to the database correctly', async () => {
   expect(contents).toContain('Blog Post 69');
 });
 
+test('likes property is set to 0 when not defined in body', async () => {
+  const sampleNoLikes = {
+    title: 'Blog Post 69',
+    author: 'Author 69',
+    url: 'http://example.com/blog69',
+  };
+
+  const blogToTest = await api
+    .post('/api/blogs')
+    .send(sampleNoLikes)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  // const response = await api.get('/api/blogs');
+  // const [blogToTest] = response.body.filter((c) => c.title === 'Blog Post 69');
+  expect(blogToTest.body.likes).toBe(0);
+});
+
 beforeEach(async () => {
   await Blog.deleteMany({});
-  let noteObject = new Blog(initialBlogs[0]);
-  await noteObject.save();
-  noteObject = new Blog(initialBlogs[1]);
-  await noteObject.save();
-  noteObject = new Blog(initialBlogs[2]);
-  await noteObject.save();
-  noteObject = new Blog(initialBlogs[3]);
-  await noteObject.save();
+  const blogPromises = initialBlogs.map((blog) => new Blog(blog).save());
+  await Promise.all(blogPromises);
 });
 
 afterAll(async () => {
