@@ -40,13 +40,12 @@ test('blogs are returned as json', async () => {
   expect(response.body).toHaveLength(initialBlogs.length);
 });
 
-test('blogs are returned as json', async () => {
+test('blogs unique _id is named id', async () => {
   const response = await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/);
-
-  expect(response.body).toHaveLength(initialBlogs.length);
+  expect(response.body[0].id).toBeDefined();
 });
 beforeEach(async () => {
   await Blog.deleteMany({});
