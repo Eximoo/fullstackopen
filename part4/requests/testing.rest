@@ -8,5 +8,5 @@ Content-Type: application/json
     "title": "damemona",
     "author": "aw pamietam",
     "url": "example.com",
-    "likes": "5s"
+    "likes": "5"
 }

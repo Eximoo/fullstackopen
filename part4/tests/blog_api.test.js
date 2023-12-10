@@ -1,35 +1,15 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const helper = require('./test_helper');
 const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
 
-const initialBlogs = [
-  {
-    title: 'Blog Post 1',
-    author: 'Author 1',
-    url: 'http://example.com/blog1',
-    likes: 10,
-  },
-  {
-    title: 'Blog Post 2',
-    author: 'Author 2',
-    url: 'http://example.com/blog2',
-    likes: 20,
-  },
-  {
-    title: 'Blog Post 3',
-    author: 'Author 3',
-    url: 'http://example.com/blog3',
-    likes: 30,
-  },
-  {
-    title: 'Blog Post 4',
-    author: 'Author 4',
-    url: 'http://example.com/blog4',
-    likes: 40,
-  },
-];
+beforeEach(async () => {
+  await Blog.deleteMany({});
+  const blogPromises = helper.initialBlogs.map((blog) => new Blog(blog).save());
+  await Promise.all(blogPromises);
+});
 
 test('blogs are returned as json', async () => {
   const response = await api
@@ -37,7 +17,7 @@ test('blogs are returned as json', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  expect(response.body).toHaveLength(initialBlogs.length);
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
 test('blogs unique _id is named id', async () => {
@@ -47,6 +27,22 @@ test('blogs unique _id is named id', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/);
   expect(response.body[0].id).toBeDefined();
+});
+
+describe('deletion of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+
+    const contents = blogsAtEnd.map((r) => r.content);
+
+    expect(contents).not.toContain(blogToDelete.url);
+  });
 });
 
 test('blog is added to the database correctly', async () => {
@@ -66,7 +62,7 @@ test('blog is added to the database correctly', async () => {
   const response = await api.get('/api/blogs');
   const contents = response.body.map((r) => r.title);
 
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
   expect(contents).toContain('Blog Post 69');
 });
 
@@ -102,11 +98,6 @@ test('missing url returns 400', async () => {
   };
 
   await api.post('/api/blogs').send(sampleNoLikes).expect(400);
-});
-beforeEach(async () => {
-  await Blog.deleteMany({});
-  const blogPromises = initialBlogs.map((blog) => new Blog(blog).save());
-  await Promise.all(blogPromises);
 });
 
 afterAll(async () => {
